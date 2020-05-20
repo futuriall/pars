@@ -1,0 +1,21 @@
+import requests 
+import pandas as pd
+from bs4 import BeautifulSoup
+
+URL = ''
+type = 'table'
+attr1 = ""
+attr2 = ""
+req = requests.get(URL)
+soup = BeautifulSoup(req.text, 'lxml')
+text = soup.find(type, attrs={attr1 : attr2})
+
+heading_table = [] 
+for row in text.find_all('th'): 
+        heading_table.append(row.text) 
+content=[] 
+for row in text.find_all('tr'): 
+    if not row.find_all('th'): 
+            content.append([element.text for element in row.find_all('td')])
+
+dataframe = pd.DataFrame(content, columns=heading_table)
